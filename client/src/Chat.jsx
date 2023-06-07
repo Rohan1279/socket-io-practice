@@ -8,15 +8,22 @@ export default function Chats({ socket, userName, room }) {
   console.log(socket?.connected);
   // console.log(userName);
   const sendMessage = async () => {
+    function formatAMPM(date) {
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      var strTime = hours + ":" + minutes + " " + ampm;
+      return strTime;
+    }
     if (currentMessage) {
       const messageData = {
         room: room,
         author: userName,
         message: currentMessage,
-        time:
-          new Date(Date.now()).getHours() +
-          ":" +
-          new Date(Date.now()).getMinutes(),
+        time: formatAMPM(new Date()),
       };
       await socket.emit("send_message", messageData);
       setMessageList((list) => [...list, messageData]);
@@ -36,32 +43,52 @@ export default function Chats({ socket, userName, room }) {
       <div className="">
         <p className="text-center">Live Chat</p>
       </div>
-      <div className="mt-20">
+      <div className="mt-20 px-16">
         {messageList?.map((messageContent, idx) => {
           return (
-            <div className="">
-              <div className={``}>
-                <div className="bg-red-200 ">
-                  <p className={` px-6 rounded-md  ${userName === messageContent?.author ? "bg-violet-300 text-left":  "bg-blue-200 text-right"}`}>
+            <div className="max-w-4xl mx-auto ">
+              <div className={`bg-blue-100/50`}>
+                <div
+                  className={`w-fit ${
+                    userName === messageContent?.author
+                      ? "ml-auto"
+                      : "  "
+                  }`}
+                >
+                  <p
+                    className={`rounded-2xl max-w-xs w-fit break-all px-3 py-1  text-sm font-medium tracking-wider text-gray-500 ${
+                      userName === messageContent?.author
+                        ? "bg-violet-200 ml-auto"
+                        : "bg-blue-200 "
+                    }`}
+                  >
+                    {/* <span className="flex justify-center items-center bg-red-600 text-">
+                    {messageContent?.message}
+
+                    </span> */}
                     {messageContent?.message}
                   </p>
-                </div>
-                <div className="flex text-xs  text-gray-400">
-                  <p>{messageContent?.time}</p>
-                  <p>{messageContent?.author}</p>
+                  <div className=" text-xs  text-gray-400">
+                    <p className="">{messageContent?.time}</p>
+                    {/* <p>{messageContent?.author}</p> */}
+                  </div>
                 </div>
               </div>
             </div>
           );
         })}
       </div>
-      <div className="chat-footer">
+      <div className="flex justify-center mt-10">
         <input
-          onChange={(e) => setCurrentMessage(e.target.value)}
+        className=""
+          onChange={(e) => {
+            setCurrentMessage(e.target.value);
+          }}
           type="text"
           placeholder="Hey..."
           onKeyDown={(e) => {
             e.key === "Enter" && sendMessage();
+            // e.target.reset();
           }}
         />
         <button onClick={sendMessage}>&#9658;</button>
@@ -69,3 +96,4 @@ export default function Chats({ socket, userName, room }) {
     </div>
   );
 }
+
