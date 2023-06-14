@@ -8,7 +8,7 @@ function App() {
   const [userName, setUserName] = useState("");
   const [room, setRoom] = useState("");
   const [showChat, setShowChat] = useState(false);
-  console.log(socket?.connected);
+ 
   const joinRoom = () => {
     if (userName && room) {
       socket.emit("join_room", room);
@@ -17,13 +17,13 @@ function App() {
   };
   return (
     <>
-      <div>
+      <div className="">
         {!showChat ? (
           <div className="h-screen grid justify-center items-center">
             <h3 className="text-center">Join A Chat</h3>
             <div className="flex justify-center items-center gap-x-10">
               <input
-                className="border border-black  pl-2"
+                className="border border-black pl-2"
                 type="text"
                 placeholder="Name"
                 onChange={(e) => setUserName(e.target.value)}
