@@ -25,9 +25,9 @@ export default function Chats({ socket, userName, room }) {
         message: currentMessage,
         time: formatAMPM(new Date()),
       };
-      await socket.emit("send_message", [...messageList, messageData]);
+      await socket.emit("send_message", messageData);
       setMessageList((list) => [...list, messageData]);
-      setCurrentMessage("")
+      setCurrentMessage("");
     }
   };
   useEffect(() => {
@@ -44,39 +44,42 @@ export default function Chats({ socket, userName, room }) {
         <p className="text-center">Live Chat</p>
       </div>
       {/* <div className=" "> */}
-        <ScrollToBottom className="h-[32rem] bg-blue-100/50 max-w-xl mx-auto">
-          {messageList?.map((messageContent, idx) => {
-            return (
-              <div className=" ">
-                <div className={` px-5`}>
-                  <div
-                    className={`w-fit ${
-                      userName === messageContent?.author ? "ml-auto" : "  "
+      <button className="bg-blue-300 p-3">{room}</button>
+      <ScrollToBottom className="h-[32rem] bg-blue-100/50 max-w-xl mx-auto">
+      
+        {messageList?.map((messageContent, idx) => {
+          return (
+            <div className=" ">
+              <div className={` px-5`}>
+                <div
+                  className={`w-fit ${
+                    userName === messageContent?.author ? "ml-auto" : "  "
+                  }`}
+                >
+                  <p
+                    className={`rounded-t-2xl  max-w-xs w-fit break-all px-3 py-1  text-sm font-medium tracking-wider text-gray-500 ${
+                      userName === messageContent?.author
+                        ? "bg-violet-200 ml-auto rounded-bl-2xl"
+                        : "bg-blue-200 rounded-br-2xl"
                     }`}
                   >
-                    <p
-                      className={`rounded-t-2xl  max-w-xs w-fit break-all px-3 py-1  text-sm font-medium tracking-wider text-gray-500 ${
-                        userName === messageContent?.author
-                          ? "bg-violet-200 ml-auto rounded-bl-2xl"
-                          : "bg-blue-200 rounded-br-2xl"
-                      }`}
-                    >
-                      {/* <span className="flex justify-center items-center bg-red-600 text-">
+                    {/* <span className="flex justify-center items-center bg-red-600 text-">
                     {messageContent?.message}
 
                     </span> */}
-                      {messageContent?.message}
-                    </p>
-                    <div className=" text-xs  text-gray-400">
-                      <p className={``}>{messageContent?.time}</p>
-                      {/* <p>{messageContent?.author}</p> */}
-                    </div>
+                    {messageContent?.message}
+                  </p>
+                  <div className=" text-xs  text-gray-400">
+                    <p className={``}>{messageContent?.time}</p>
+                    {/* <p>{messageContent?.author}</p> */}
                   </div>
                 </div>
               </div>
-            );
-          })}
-        </ScrollToBottom>
+            </div>
+          );
+        }
+        )}
+      </ScrollToBottom>
       {/* </div> */}
       <div className="flex justify-center">
         <input
